@@ -9,7 +9,7 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <name>BikeShare</name>
-    <description>Demo project for Bike Share</description>
+    <description>Capital One 2019 Summit; Bike Share</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

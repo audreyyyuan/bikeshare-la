@@ -11,24 +11,24 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 import com.example.bikesharela.model.BikeShareData;
-import com.example.bikesharela.service.ParseBikeShareData;
+import com.example.bikesharela.service.ParseBikeShareService;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.example.bikesharela"})
 
-public class BikeShareApplication implements  CommandLineRunner{
+public class Application implements  CommandLineRunner{
 
     @Autowired
-    private ParseBikeShareData parseBikeShareService;
+    private ParseBikeShareService parseBikeShareService;
 
     public static void main(String[] args) {
-        SpringApplication.run(BikeShareApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Override
     public void run(String... args) throws Exception {
 
-        List<BikeShareData> rows = this.parseBikeShareService.loadDate("data.csv");
+        List<BikeShareData> rows = this.parseBikeShareService.loadData("data.csv");
 
         Integer total = rows.size();
         System.out.println("Loaded " + total);
@@ -48,7 +48,7 @@ public class BikeShareApplication implements  CommandLineRunner{
         System.out.println("Most popular starting station: " );
         startingStationCounting.entrySet().stream()
                 .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
-                .limit(1)
+                .limit(5)
                 .forEach(System.out::println); // or any other terminal method
 
         System.out.println(startingStationCounting);

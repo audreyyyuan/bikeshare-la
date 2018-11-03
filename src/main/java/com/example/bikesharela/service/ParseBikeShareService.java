@@ -16,13 +16,13 @@ import org.springframework.stereotype.Service;
 import com.example.bikesharela.model.BikeShareData;
 
 @Service
-public class ParseBikeShareData {
+public class ParseBikeShareService {
 
-    public List<BikeShareData> loadDate(String fileName) throws FileNotFoundException, IOException{
+    public List<BikeShareData> loadData(String fname) throws FileNotFoundException, IOException{
         List<BikeShareData> rows = new ArrayList<BikeShareData>();
 
-        File file = new ClassPathResource(fileName).getFile();
-        CSVParser parser = new CSVParser(new FileReader(file), CSVFormat.DEFAULT.withHeader());
+        File f = new ClassPathResource(fname).getFile();
+        CSVParser parser = new CSVParser(new FileReader(f), CSVFormat.DEFAULT.withHeader());
 
         for (CSVRecord record : parser) {
             BikeShareData row = new BikeShareData(
