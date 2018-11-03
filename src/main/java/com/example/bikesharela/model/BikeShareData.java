@@ -11,8 +11,12 @@ public class BikeShareData {
     private Integer duration;
     private Date startTime;
     private Date endTime;
-    private Integer startingPositionId;
-    private Integer endingPositionId;
+    private Integer startingStationId;
+    private Double startingLatitude;
+    private Double startingLongitude;
+    private Integer endingStationId;
+    private Double endingLatitude;
+    private Double endingLongitude;
     private Integer bikeId;
     private Integer planDuration;
     private String tripCategory;
@@ -47,14 +51,19 @@ public class BikeShareData {
 
     }
 
-    public BikeShareData(Integer duration, String startTime, String endTime, Integer startingPositionId, Integer endingPositionId,
-                   Integer bikeId, Integer planDuration, String tripCategory, String passholderType) {
+    public BikeShareData(Integer duration, String startTime, String endTime, Integer startingPositionId,
+                   Double startingLatitude, Double startingLongitude, Integer endingPositionId, Double endingLatitude,
+                   Double endingLongitude, Integer bikeId, Integer planDuration, String tripCategory, String passholderType) {
         super();
         this.duration = duration;
         this.startTime = this.convertStringToDate(startTime);
         this.endTime = this.convertStringToDate(endTime);
-        this.startingPositionId = startingPositionId;
-        this.endingPositionId = endingPositionId;
+        this.startingStationId = startingPositionId;
+        this.startingLatitude = startingLatitude;
+        this.startingLongitude = startingLongitude;
+        this.endingStationId = endingPositionId;
+        this.endingLatitude = endingLatitude;
+        this.endingLongitude = endingLongitude;
         this.bikeId = bikeId;
         this.planDuration = planDuration;
         this.tripCategory = tripCategory;
@@ -84,21 +93,53 @@ public class BikeShareData {
 
         this.endTime = endTime;
     }
-    public Integer getStartingPositionId() {
+    public Integer getStartingStationId() {
 
-        return startingPositionId;
+        return startingStationId;
     }
-    public void setStartingPositionId(Integer startingPositionId) {
+    public void setStartingStationId(Integer startingStationId) {
 
-        this.startingPositionId = startingPositionId;
+        this.startingStationId = startingStationId;
     }
-    public Integer getEndingPositionId() {
+    public Double getStartingLatitude() {
 
-        return endingPositionId;
+        return startingLatitude;
     }
-    public void setEndingPositionId(Integer endingPositionId) {
+    public void setStartingLatitude(Double startingLatitude) {
 
-        this.endingPositionId = endingPositionId;
+        this.startingLatitude = startingLatitude;
+    }
+    public Double getStartingLongitude() {
+
+        return startingLongitude;
+    }
+    public void setStartingLongitude(Double startingLongitude) {
+
+        this.startingLongitude = startingLongitude;
+    }
+    public Integer getEndingStationId() {
+
+        return endingStationId;
+    }
+    public void setEndingStationId(Integer endingStationId) {
+
+        this.endingStationId = endingStationId;
+    }
+    public Double getEndingLatitude() {
+
+        return endingLatitude;
+    }
+    public void getEndingLatitude(Double endingLatitude) {
+
+        this.endingLatitude = endingLatitude;
+    }
+    public Double getEndingLongitude() {
+
+        return endingLongitude;
+    }
+    public void getEndingLongitude(Double endingLongitude) {
+
+        this.endingLongitude = endingLongitude;
     }
     public Integer getBikeId() {
 

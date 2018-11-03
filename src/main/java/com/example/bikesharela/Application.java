@@ -42,7 +42,7 @@ public class Application implements  CommandLineRunner{
 
 
         Map<Integer, Long> startingStationCounting = rows.stream().collect(
-                Collectors.groupingBy(BikeShareData::getStartingPositionId, Collectors.counting()));
+                Collectors.groupingBy(BikeShareData::getStartingStationId, Collectors.counting()));
 
 
         System.out.println("Most popular starting station: " );
