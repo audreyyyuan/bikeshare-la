@@ -92,8 +92,11 @@ public class AnalysisService {
         Double averageDistance = this.dataList
                 .stream()
                 .filter(r -> (r.getStartingLatitude() != 0 && r.getStartingLongitude() != 0) || (r.getEndingLatitude() != 0 && r.getEndingLongitude() != 0))
-                .collect(Collectors.averagingDouble(r -> {
+                .collect(Collectors.averagingDouble(r -> "Round Trip".equals(r.getTripCategory())
+                        ?(((double) r.getDuration() / 60.0) * (speed / 60.0))
+                        :(calculateDistance(r.getStartingLatitude(), r.getStartingLongitude(), r.getEndingLatitude(), r.getEndingLongitude())))); //{
 
+                    /**
                     double distance = 0;
 
                     if(r.getTripCategory().equals("Round Trip")) {
@@ -108,14 +111,17 @@ public class AnalysisService {
                         distance = calculateDistance(r.getStartingLatitude(), r.getStartingLongitude(), r.getEndingLatitude(), r.getEndingLongitude());
 
                     return distance;
-                }));
+
+                    return "Round Trip".equals(r.getTripCategory())
+                            ?(((double) r.getDuration() / 60.0) * (speed / 60.0))
+                            :(calculateDistance(r.getStartingLatitude(), r.getStartingLongitude(), r.getEndingLatitude(), r.getEndingLongitude()));
+                })); */
 
         stat.setAverageDistance(averageDistance);
 
         //determines most popular starting station
         Map<Integer, Long> startingStationCounting = this.dataList.stream().collect(
                 Collectors.groupingBy(BikeShareData::getStartingStationId, Collectors.counting()));
-
 
         Integer mostPopularStartingStationId = startingStationCounting.entrySet().stream()
                 .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
@@ -128,15 +134,11 @@ public class AnalysisService {
         Map<Integer, Long> endingStationCounting = this.dataList.stream().collect(
                 Collectors.groupingBy(BikeShareData::getEndingStationId, Collectors.counting()));
 
-
         Integer mostPopularEndingStation = endingStationCounting.entrySet().stream()
                 .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
                 .limit(5).findFirst().get().getKey();
 
-        System.out.println(mostPopularEndingStation);
-
         StationData popularEnd = this.stationList.get(mostPopularEndingStation);
-        System.out.println(popularEnd.getStationName());
         stat.setMostPopularEndingStation(popularEnd.getStationName());
 
         // assume trips started between 7-9 and 17-19 are commute trips
@@ -248,6 +250,8 @@ public class AnalysisService {
     //bar chart
     public ChartData getMonthlyData() {
 
+        String[] months = {"January", "February", "March", "April", "May", "June", "July", "August",
+                "September", "October", "November", "December"};
         int[] month_ow = new int[12];
         int[] month_rt = new int[12];
 
@@ -264,48 +268,85 @@ public class AnalysisService {
         ChartData data = new ChartData();
 
         List<Column> columns = new ArrayList<>();
-        Column c = data.new Column();
-        c.setType("string");
-        c.setLabel("Month");
-        columns.add(c);
-        c = data.new Column();
-        c.setType("number");
-        c.setLabel("One Way");
-        columns.add(c);
-        c = data.new Column();
-        c.setType("number");
-        c.setLabel("Round Trip");
-        columns.add(c);
+        Column col = data.new Column();
+        col.setType("string");
+        col.setLabel("Month");
+        columns.add(col);
+        col = data.new Column();
+        col.setType("number");
+        col.setLabel("One Way");
+        columns.add(col);
+        col = data.new Column();
+        col.setType("number");
+        col.setLabel("Round Trip");
+        columns.add(col);
 
+        List<Row> rows = new ArrayList<>();
         for(int i = 0; i < 12; i++) {
 
+            List<Cell> cells = new ArrayList<>();
+            cells.add(dataToCell(months[i]));
+            cells.add(dataToCell(month_ow[i]));
+            cells.add(dataToCell(month_rt[i]));
 
+            Row r = data.new Row();
+            r.setC(cells);
+            rows.add(r);
         }
+
+        data.setCols(columns);
+        data.setRows(rows);
 
         return data;
     }
 
     //line chart
-    public void getDurationData() {
+    public ChartData getDurationData() {
 
-        int[] sum_duration = new int[12];
-        int[] num_rides = new int[12];
+        String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September",
+                "October", "November", "December"};
         double[] avg_duration = new double[12];
+        int[] count = new int[12];
 
         this.dataList.stream()
                 .forEach(r -> {
                     int month = getMonth(r.getStartTime());
-                    int duration = r.getDuration();
-                    sum_duration[month] = sum_duration[month] + duration;
-                    num_rides[month] = num_rides[month] + 1;
+                    double sum = avg_duration[month] * count[month];
+                    sum += r.getDuration();
+                    count[month] = count[month] + 1;
+
+                    double updatedAvg = sum / (count[month]);
+                    avg_duration[month] = updatedAvg;
                 });
 
+        ChartData data = new ChartData();
+
+        List<Column> columns = new ArrayList<>();
+        Column col = data.new Column();
+        col.setType("string");
+        col.setLabel("Month");
+        columns.add(col);
+        col = data.new Column();
+        col.setType("number");
+        col.setLabel("Average Duration");
+        columns.add(col);
+
+        List<Row> rows = new ArrayList<>();
         for(int i = 0; i < 12; i++) {
 
-            avg_duration[i] = ((double) sum_duration[i]) / num_rides[i];
-        }
-    }
+            List<Cell> cells = new ArrayList<>();
+            cells.add(dataToCell(months[i]));
+            cells.add(dataToCell(avg_duration[i]));
 
+            Row r = data.new Row();
+            r.setC(cells);
+            rows.add(r);
+        }
+
+        data.setCols(columns);
+        data.setRows(rows);
+        return data;
+    }
 
     public List<BikeShareData> getDataList() {
 

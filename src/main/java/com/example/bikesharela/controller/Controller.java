@@ -24,4 +24,14 @@ public class Controller {
     public ChartData getData() {
         return this.analysisService.getRouteData();
     }
+
+    @RequestMapping(value="/month", method = RequestMethod.GET)
+    public ChartData getMonthlyData() {
+        return this.analysisService.getMonthlyData();
+    }
+
+    @RequestMapping(value="/avgdur", method = RequestMethod.GET)
+    public ChartData getAverageDuration() {
+        return this.analysisService.getDurationData();
+    }
 }
