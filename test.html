@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+    
+    // Load the Visualization API and the piechart package.
+    google.charts.load('current', {'packages':['corechart', 'bar']});
+      
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+      
+    function drawChart() {
+      var jsonData = '{"cols":[{"type":"string","id":null,"label":"Passholder Type"},{"type":"number","id":null,"label":"One Way"},{"type":"number","id":null,"label":"Round Trip"}],"rows":[{"c":[{"v":"Flex Pass"},{"v":9034},{"v":483}]},{"c":[{"v":"Monthly Pass"},{"v":77532},{"v":3772}]},{"c":[{"v":"Staff Annual"},{"v":299},{"v":83}]},{"c":[{"v":"Walk-Up"},{"v":32777},{"v":8447}]}]}'
+          
+      // Create our data table out of JSON data loaded from server.
+      var data = new google.visualization.DataTable(jsonData);
+
+      var chart = new google.charts.Bar(document.getElementById('chart_div'));
+	  chart.draw(data, google.charts.Bar.convertOptions({width: 3200, height: 1920}));
+
+      // Instantiate and draw our chart, passing in some options.
+      //var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      //chart.draw(data, {width: 3200, height: 1920});
+    }
+
+    </script>
+  </head>
+
+  <body>
+    <div id="chart_div"></div>
+  </body>
+</html>
