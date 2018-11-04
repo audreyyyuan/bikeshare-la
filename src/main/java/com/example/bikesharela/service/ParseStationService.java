@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Map;
 import java.util.HashMap;
-import java.util.AbstractMap;
 
 import com.example.bikesharela.model.StationData;
 import org.apache.commons.csv.CSVFormat;
@@ -19,7 +19,7 @@ import com.example.bikesharela.model.BikeShareData;
 @Service
 public class ParseStationService {
 
-    public AbstractMap<Integer, StationData> loadStations(String fname) throws FileNotFoundException, IOException {
+    public Map<Integer, StationData> loadStations(String fname) throws FileNotFoundException, IOException {
 
         HashMap<Integer, StationData> stations = new HashMap<>();
 

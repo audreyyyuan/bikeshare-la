@@ -1,5 +1,6 @@
 package com.example.bikesharela.controller;
 
+import com.example.bikesharela.model.ChartData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,5 +18,10 @@ public class Controller {
     @RequestMapping(value="/statistics", method = RequestMethod.GET)
     public Statistics getStat() {
         return this.analysisService.getStatistics();
+    }
+
+    @RequestMapping(value="/passholder", method = RequestMethod.GET)
+    public ChartData getData() {
+        return this.analysisService.getRouteData();
     }
 }

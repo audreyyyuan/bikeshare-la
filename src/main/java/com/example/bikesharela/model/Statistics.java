@@ -6,6 +6,7 @@ public class Statistics {
     private Double averageDuration;
     private Double averageDistance;
     private String mostPopularStartingStation;
+    private String mostPopularEndingStation;
     private Integer commuteTrips;
 
 
@@ -32,6 +33,12 @@ public class Statistics {
     }
     public void setMostPopularStartingStation(String mostPopularStartingStation) {
         this.mostPopularStartingStation = mostPopularStartingStation;
+    }
+    public String getMostPopularEndingStation() {
+        return mostPopularEndingStation;
+    }
+    public void setMostPopularEndingStation(String mostPopularStartingStation) {
+        this.mostPopularEndingStation = mostPopularEndingStation;
     }
     public Integer getCommuteTrips() {
         return commuteTrips;
