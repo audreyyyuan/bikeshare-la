@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import com.example.bikesharela.model.StationData;
+import javafx.scene.chart.Chart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,9 @@ public class AnalysisService {
 
     //calculates haversine distance between two points
     private double calculateDistance(double lat1, double long1, double lat2, double long2) {
+
+        if(lat1 == 0 || lat2 == 0 || long1 == 0 || long2 == 0)
+            return 0;
 
         double latDiff = Math.toRadians(lat2 - lat1);
         double longDiff = Math.toRadians(long2 - long1);
@@ -87,6 +91,7 @@ public class AnalysisService {
         //calculates average distance of bike rides
         Double averageDistance = this.dataList
                 .stream()
+                .filter(r -> (r.getStartingLatitude() != 0 && r.getStartingLongitude() != 0) || (r.getEndingLatitude() != 0 && r.getEndingLongitude() != 0))
                 .collect(Collectors.averagingDouble(r -> {
 
                     double distance = 0;
@@ -126,10 +131,13 @@ public class AnalysisService {
 
         Integer mostPopularEndingStation = endingStationCounting.entrySet().stream()
                 .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
-                .limit(1).findFirst().get().getKey();
+                .limit(5).findFirst().get().getKey();
 
-        StationData popularEnd = this.stationList.get(mostPopularStartingStationId);
-        stat.setMostPopularStartingStation(popularEnd.getStationName());
+        System.out.println(mostPopularEndingStation);
+
+        StationData popularEnd = this.stationList.get(mostPopularEndingStation);
+        System.out.println(popularEnd.getStationName());
+        stat.setMostPopularEndingStation(popularEnd.getStationName());
 
         // assume trips started between 7-9 and 17-19 are commute trips
         stat.setCommuteTrips(new Long(this.dataList.stream()
@@ -141,6 +149,7 @@ public class AnalysisService {
     }
 
     //column chart
+    //FIX THE HECK OUT OF THIS
     public ChartData getRouteData() {
 
         Integer[] flex = {0, 0};
@@ -237,7 +246,7 @@ public class AnalysisService {
     }
 
     //bar chart
-    public void getMonthlyData() {
+    public ChartData getMonthlyData() {
 
         int[] month_ow = new int[12];
         int[] month_rt = new int[12];
@@ -251,6 +260,29 @@ public class AnalysisService {
                     else
                         month_rt[month] = month_rt[month] + 1;
                 });
+
+        ChartData data = new ChartData();
+
+        List<Column> columns = new ArrayList<>();
+        Column c = data.new Column();
+        c.setType("string");
+        c.setLabel("Month");
+        columns.add(c);
+        c = data.new Column();
+        c.setType("number");
+        c.setLabel("One Way");
+        columns.add(c);
+        c = data.new Column();
+        c.setType("number");
+        c.setLabel("Round Trip");
+        columns.add(c);
+
+        for(int i = 0; i < 12; i++) {
+
+
+        }
+
+        return data;
     }
 
     //line chart
@@ -283,5 +315,11 @@ public class AnalysisService {
     public void setDataList(List<BikeShareData> dataList) {
 
         this.dataList = dataList;
+    }
+
+    public static void main(String [] args) {
+
+        AnalysisService as = new AnalysisService();
+        System.out.println(as.calculateDistance(34.028511, -118.25667, 34.0342102, -118.25459));
     }
 }

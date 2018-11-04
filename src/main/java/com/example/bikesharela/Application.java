@@ -54,6 +54,18 @@ public class Application implements  CommandLineRunner{
 
         System.out.println(startingStationCounting);
 
+        Map<Integer, Long> endingStationCounting = rows.stream().collect(
+                Collectors.groupingBy(BikeShareData::getEndingStationId, Collectors.counting()));
+
+
+        System.out.println("Most popular ending station: " );
+        endingStationCounting.entrySet().stream()
+                .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
+                .limit(5)
+                .forEach(System.out::println); // or any other terminal method
+
+        System.out.println(endingStationCounting);
+
         // check commute hours
 
         System.out.println("Commute: " + rows.stream().filter(r -> (r.getStartHour() > 7 && r.getStartHour() < 9 ||r.getStartHour() > 17 && r.getStartHour() < 19 )).count());

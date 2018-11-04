@@ -37,7 +37,7 @@ public class Statistics {
     public String getMostPopularEndingStation() {
         return mostPopularEndingStation;
     }
-    public void setMostPopularEndingStation(String mostPopularStartingStation) {
+    public void setMostPopularEndingStation(String mostPopularEndingStation) {
         this.mostPopularEndingStation = mostPopularEndingStation;
     }
     public Integer getCommuteTrips() {
