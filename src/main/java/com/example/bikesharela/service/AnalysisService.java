@@ -26,11 +26,25 @@ public class AnalysisService {
     @Autowired
     private ParseStationService parseStationService;
 
+    /**
+     * A list of all the bike share data from July 2016 (launch) - March 2017
+     */
     private List<BikeShareData> dataList;
+
+    /**
+     * A mapping of all the station IDs to the information about that station.
+     */
     private Map<Integer, StationData> stationList;
 
-    private static final double Rearth = 3963.191; //miles
-    private static final double speed = 7.456; //from https://www.citibikenyc.com/system-data
+    /**
+     * radius of the Earth, in miles
+     */
+    private static final double Rearth = 3963.191;
+
+    /**
+     * average bike speed, obtained from https://www.citibikenyc.com/system-data
+     */
+    private static final double speed = 7.456;
 
     @PostConstruct
     public void init() throws FileNotFoundException, IOException {
@@ -38,7 +52,14 @@ public class AnalysisService {
         this.stationList = this.parseStationService.loadStations("stations.csv");
     }
 
-    //calculates haversine distance between two points
+    /**
+     * Calculates the haversine distance between two points (the distance between two points on a sphere)
+     * @param lat1 latitude of 1st point
+     * @param long1 longitude of 1st point
+     * @param lat2 latitude of 2nd point
+     * @param long2 longitude of 2nd point
+     * @return the distance, in miles, between
+     */
     private double haversineDistance(double lat1, double long1, double lat2, double long2) {
 
         if(lat1 == 0 || lat2 == 0 || long1 == 0 || long2 == 0)
@@ -54,6 +75,11 @@ public class AnalysisService {
         return distance;
     }
 
+    /**
+     * Creates a cell in a data table with the value <code>v</code>
+     * @param v the value of the cell
+     * @return cell with given value
+     */
     private Cell dataToCell(Object v) {
 
         Cell c =  new ChartData().new Row().new Cell();
@@ -61,12 +87,23 @@ public class AnalysisService {
         return c;
     }
 
+    /**
+     * Rounds a number <code>round(57.6859, 2)</code> = 57.69
+     * @param value the number to round
+     * @param places the number of places after the decimal to round it to
+     * @return the number rounded up/down
+     */
     private double round(double value, int places) {
 
         int scale = (int) Math.pow(10, places);
         return (double) Math.round(value * scale) / scale;
     }
 
+    /**
+     * Analyzes the data and calculates the basic statistics about the bike share data (such as average distance,
+     * popular start/end stations, etc)
+     * @return the basic statistics about the bike share data in JSON
+     */
     public Statistics getStatistics() {
 
         Statistics stat = new Statistics();
@@ -122,8 +159,11 @@ public class AnalysisService {
         return stat;
     }
 
-    //column chart
-    //FIX THE HECK OUT OF THIS
+    /**
+     * Determines the route data for the average trip duration of each pass plan, for each trip type. Parses data
+     * and creates a new data table with the given information, used to later create a column chart
+     * @return a new data table with the average trip duration for each pass plan and trip type in JSON
+     */
     public ChartData getRouteData() {
 
         Double[] flex = {0.0, 0.0};
@@ -240,7 +280,12 @@ public class AnalysisService {
         return data;
     }
 
-    //bar chart
+    /**
+     * Analyzes the data and calculates the number of bike trips of each trip type (one way / round trip) during each
+     * month. This data is later used to create a column chart with the information. Converts data into a data table
+     * with all the information needed for the chart
+     * @return data table with the number of one way and round trip transactions for each month.
+     */
     public ChartData getMonthlyData() {
 
         String[] months = {"January", "February", "March", "April", "May", "June", "July", "August",
