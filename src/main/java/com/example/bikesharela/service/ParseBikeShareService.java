@@ -20,9 +20,9 @@ public class ParseBikeShareService {
         List<BikeShareData> rows = new ArrayList<BikeShareData>();
 
         //File f = new ClassPathResource(fname).getFile();
-        //InputStream in = ParseBikeShareService.class.getResourceAsStream(fname);
-        File file = ResourceUtils.getFile("classpath:" + fname);
-        CSVParser parser = new CSVParser(new FileReader(file), CSVFormat.DEFAULT.withHeader());
+        InputStream in = getClass().getClassLoader().getResourceAsStream(fname);
+        //File file = ResourceUtils.getFile("classpath:" + fname);
+        CSVParser parser = new CSVParser(new InputStreamReader(in), CSVFormat.DEFAULT.withHeader());
 
         for (CSVRecord record : parser) {
             BikeShareData row = new BikeShareData(

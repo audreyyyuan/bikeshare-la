@@ -22,9 +22,9 @@ public class ParseStationService {
         HashMap<Integer, StationData> stations = new HashMap<>();
 
         //File f = new ClassPathResource(fname).getFile();
-        File file = ResourceUtils.getFile("classpath:" + fname);
-        //InputStream in = ParseStationService.class.getResourceAsStream(fname);
-        CSVParser parser = new CSVParser(new FileReader(file), CSVFormat.DEFAULT.withHeader());
+        //File file = ResourceUtils.getFile("classpath:" + fname);
+        InputStream in = getClass().getClassLoader().getResourceAsStream(fname);
+        CSVParser parser = new CSVParser(new InputStreamReader(in), CSVFormat.DEFAULT.withHeader());
 
         for (CSVRecord record : parser) {
 
