@@ -4,7 +4,7 @@ $(document).ready(function() {
     $('select').formSelect();
 });
 
-
+//selections + chart drawing
 google.charts.load('current', {'packages':['corechart', 'bar', 'line']});
 google.charts.setOnLoadCallback(loadAndDrawChart);
 
@@ -62,6 +62,7 @@ function loadAndDrawChart(option) {
 
 }
 
+//statistics blurb
 var stats = new Vue({
 	el: '#statistics',
 	data: {
@@ -89,6 +90,7 @@ var stats = new Vue({
 	},
 });
 
+//selection
 var select = new Vue({
 	el: '#selector',
 	data: {
