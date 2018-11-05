@@ -16,7 +16,7 @@ import com.example.bikesharela.service.ParseBikeShareService;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.example.bikesharela"})
 
-public class Application implements  CommandLineRunner{
+public class Application {
 
     @Autowired
     private ParseBikeShareService parseBikeShareService;
@@ -25,47 +25,4 @@ public class Application implements  CommandLineRunner{
         SpringApplication.run(Application.class, args);
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-
-        List<BikeShareData> rows = this.parseBikeShareService.loadData("data.csv");
-
-        Integer total = rows.size();
-        System.out.println("Loaded " + total);
-
-
-        Double averageDuration = rows
-                .stream()
-                .collect(Collectors.averagingInt(r -> r.getDuration()));
-
-        System.out.println("Average duration=" + averageDuration);
-
-
-        Map<Integer, Long> startingStationCounting = rows.stream().collect(
-                Collectors.groupingBy(BikeShareData::getStartingStationId, Collectors.counting()));
-
-
-        System.out.println("Most popular starting station: " );
-        startingStationCounting.entrySet().stream()
-                .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
-                .limit(5)
-                .forEach(System.out::println); // or any other terminal method
-
-        System.out.println(startingStationCounting);
-
-        Map<Integer, Long> endingStationCounting = rows.stream().collect(
-                Collectors.groupingBy(BikeShareData::getEndingStationId, Collectors.counting()));
-
-
-        System.out.println("Most popular ending station: " );
-        endingStationCounting.entrySet().stream()
-                .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
-                .limit(5)
-                .forEach(System.out::println); // or any other terminal method
-
-        System.out.println(endingStationCounting);
-
-        // check commute hours
-        System.out.println("Commute: " + rows.stream().filter(r -> (r.getStartHour() > 7 && r.getStartHour() < 9 ||r.getStartHour() > 17 && r.getStartHour() < 19 )).count());
-    }
 }

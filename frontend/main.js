@@ -4,69 +4,7 @@ $(document).ready(function() {
     $('select').formSelect();
 });
 
-/*
-function loadAndDrawChart(option) {
-
-	var path = '';
-	var title = '';
-
-	if(option == 1) {
-		path = '/passholder';
-		title = 'Average Trip Duration of Each Pass Plan';
-		subtitle = 'in minutes';
-	}
-
-	else if (option == 2) {
-		path = '/month';
-		title = 'Seasonal-- Number of Bike Trips';
-		subtitle = ''
-	}
-
-	else if (option == 3) {
-		path = '/avgdur';
-		title = 'Average Bike Trip Duration Throughout the Year';
-		subtitle = 'in minutes';
-	}
-
-	else if (option == 4) {
-		path = '/morning';
-		title = 'Morning Bike Rides in LA';
-		subtitle = 'the number of early morning (5am - 8am) bike rides taken throughout the year';
-	}
-
-	axios.get('https://ady8-bikeshare.herokuapp.com' + path)
-			.then(response => {
-				console.log(response);
-				var json = JSON.stringify(response.data);
-				console.log(json);
-				var data = new google.visualization.DataTable(json);
-
-				var options = {
-					title: title,
-					subtitle: subtitle,
-					bar: {groupWidth: "95%"},
-				};
-
-				if(option == 1 || option == 2 || option == 4) {
-
-					var chart = new google.charts.Bar(document.getElementById('chart_div'));
-					chart.draw(data, google.charts.Bar.convertOptions(options));
-				}
-
-				else if(option == 3) {
-					chart = new google.charts.Line(document.getElementById('chart_div'));
-					chart.draw(data, google.charts.Line.convertOptions(options));
-				}
-
-			})
-			.catch(function(error) {
-				console.log(error);
-			});
-
-}
-*/
-
-//statistics blurb
+//statistics top portion
 var stats = new Vue({
 	el: '#statistics',
 	data: {
@@ -80,7 +18,6 @@ var stats = new Vue({
 	mounted () {
 		axios.get('https://ady8-bikeshare.herokuapp.com/statistics')
 				.then(response => {
-					console.log(response);
 					this.total = response.data.totalTrips;
 					this.avgdist = response.data.averageDistance;
 					this.startLoc = response.data.mostPopularStartingStation;
@@ -94,7 +31,7 @@ var stats = new Vue({
 	},
 });
 
-//selection
+//selection and graph portion
 var select = new Vue({
 	el: '#selector',
 	data: {
@@ -188,9 +125,7 @@ var select = new Vue({
 			axios.get('http://localhost:8080' + path)
 			//axios.get('https://ady8-bikeshare.herokuapp.com' + path)
 					.then(response => {
-						console.log(response);
 						var json = JSON.stringify(response.data);
-						console.log(json);
 						var data = new google.visualization.DataTable(json);
 
 						var options = {

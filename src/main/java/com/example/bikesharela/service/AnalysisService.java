@@ -1,24 +1,22 @@
 package com.example.bikesharela.service;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
+import com.example.bikesharela.model.BikeShareData;
+import com.example.bikesharela.model.ChartData;
+import com.example.bikesharela.model.ChartData.Column;
+import com.example.bikesharela.model.ChartData.Row;
+import com.example.bikesharela.model.ChartData.Row.Cell;
 import com.example.bikesharela.model.StationData;
+import com.example.bikesharela.model.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.bikesharela.model.BikeShareData;
-import com.example.bikesharela.model.Statistics;
-import com.example.bikesharela.model.ChartData;
-import com.example.bikesharela.model.ChartData.*;
-import com.example.bikesharela.model.ChartData.Row.*;
+import javax.annotation.PostConstruct;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AnalysisService {
