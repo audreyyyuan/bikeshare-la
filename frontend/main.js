@@ -122,8 +122,7 @@ var select = new Vue({
 						'recreationally use these bikes after work.';
 			}
 
-			axios.get('http://localhost:8080' + path)
-			//axios.get('https://ady8-bikeshare.herokuapp.com' + path)
+			axios.get('https://ady8-bikeshare.herokuapp.com' + path)
 					.then(response => {
 						var json = JSON.stringify(response.data);
 						var data = new google.visualization.DataTable(json);

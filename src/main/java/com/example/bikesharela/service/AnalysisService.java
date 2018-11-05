@@ -344,7 +344,11 @@ public class AnalysisService {
         return data;
     }
 
-    //line chart
+    /**
+     * Analyzes the data and calculates the average duration of bike trips during the month. Converts data into a data
+     * table to create a line chart
+     * @return data table containing information over time
+     */
     public ChartData getDurationData() {
 
         String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September",
@@ -392,30 +396,10 @@ public class AnalysisService {
         return data;
     }
 
-    //gets station infromation throughout the day.
-    public void getStationData() {
-
-        //calculates most popular starting stations at the beginning of the day
-        List<StationData> popularStartOfDay = new ArrayList<>();
-        Map<Integer, Long> startingStationCounting = this.dataList.stream().collect(
-                Collectors.groupingBy(BikeShareData::getStartingStationId, Collectors.counting()));
-
-        startingStationCounting.entrySet().stream()
-                .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
-                .limit(3)
-                .forEach(entry -> popularStartOfDay.add(this.stationList.get(entry)));
-
-        //calculates most popular ending stations at the end of the day
-        List<StationData> popularEndOfDay = new ArrayList<>();
-        Map<Integer, Long> endingStationCounting = this.dataList.stream().collect(
-                Collectors.groupingBy(BikeShareData::getEndingStationId, Collectors.counting()));
-
-        endingStationCounting.entrySet().stream()
-                .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
-                .limit(3)
-                .forEach(entry -> popularEndOfDay.add(this.stationList.get(entry)));
-    }
-
+    /**
+     * Analyzes the data and determines the statistics (
+     * @return
+     */
     public ChartData getMorningRides() {
 
         String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September",
