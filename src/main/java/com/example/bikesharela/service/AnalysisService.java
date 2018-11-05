@@ -218,32 +218,32 @@ public class AnalysisService {
         Row r = data.new Row();
         List<Cell> rd = new ArrayList<>();
         rd.add(dataToCell("Flex Pass"));
-        rd.add(dataToCell(flex[0]));
-        rd.add(dataToCell(flex[1]));
+        rd.add(dataToCell(flex[0]/60));
+        rd.add(dataToCell(flex[1]/60));
         r.setC(rd);
         rows.add(r);
 
         r = data.new Row();
         rd = new ArrayList<>();
         rd.add(dataToCell("Monthly Pass"));
-        rd.add(dataToCell(monthly[0]));
-        rd.add(dataToCell(monthly[1]));
+        rd.add(dataToCell(monthly[0]/60));
+        rd.add(dataToCell(monthly[1]/60));
         r.setC(rd);
         rows.add(r);
 
         r = data.new Row();
         rd = new ArrayList<>();
         rd.add(dataToCell("Staff Annual"));
-        rd.add(dataToCell(staff[0]));
-        rd.add(dataToCell(staff[1]));
+        rd.add(dataToCell(staff[0]/60));
+        rd.add(dataToCell(staff[1]/60));
         r.setC(rd);
         rows.add(r);
 
         r = data.new Row();
         rd = new ArrayList<>();
         rd.add(dataToCell("Walk-Up"));
-        rd.add(dataToCell(walkup[0]));
-        rd.add(dataToCell(walkup[1]));
+        rd.add(dataToCell(walkup[0]/60));
+        rd.add(dataToCell(walkup[1]/60));
         r.setC(rd);
         rows.add(r);
 
@@ -348,10 +348,7 @@ public class AnalysisService {
 
             List<Cell> cells = new ArrayList<>();
             cells.add(dataToCell(months[i]));
-            if(avg_duration[i] == 0)
-                cells.add(null);
-            else
-                cells.add(dataToCell(avg_duration[i]));
+            cells.add(dataToCell((double) (avg_duration[i]/60)));
 
             Row r = data.new Row();
             r.setC(cells);

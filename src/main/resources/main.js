@@ -13,19 +13,22 @@ function loadAndDrawChart(option) {
 	var path = '';
 	var title = '';
 
-	if(option == 0) {
+	if(option == 1) {
 		path = '/passholder';
 		title = 'Average Trip Duration of Each Pass Plan';
-	}
-
-	else if (option == 1) {
-		path = '/month';
-		title = 'Seasonal-- Number of Bike Trips';
+		subtitle = 'in minutes';
 	}
 
 	else if (option == 2) {
+		path = '/month';
+		title = 'Seasonal-- Number of Bike Trips';
+		subtitle = ''
+	}
+
+	else if (option == 3) {
 		path = '/avgdur';
-		title = 'Average Bike Trip Duration';
+		title = 'Average Bike Trip Duration Throughout the Year';
+		subtitle = 'in minutes';
 	}
 
 	axios.get('http://localhost:8080' + path)
@@ -37,17 +40,17 @@ function loadAndDrawChart(option) {
 
 				var options = {
 					title: title,
+					subtitle: subtitle,
 					bar: {groupWidth: "95%"},
-			        legend: { position: "bottom" },
 				};
 
-				if(option == 0 || option == 1) {
+				if(option == 1 || option == 2) {
 
 					var chart = new google.charts.Bar(document.getElementById('chart_div'));
 					chart.draw(data, google.charts.Bar.convertOptions(options));
 				}
 
-				else if(option == 2) {
+				else if(option == 3) {
 					chart = new google.charts.Line(document.getElementById('chart_div'));
 					chart.draw(data, google.charts.Line.convertOptions(options));
 				}
@@ -56,9 +59,6 @@ function loadAndDrawChart(option) {
 			.catch(function(error) {
 				console.log(error);
 			});
-
-	//console.log('finished request');
-	//console.log(this.json);
 
 }
 
@@ -96,7 +96,7 @@ var select = new Vue({
 	},
 
 	mounted() {
-		loadAndDrawChart(0);
+		this.loadAndDrawChart(0);
 	}
 });
 
