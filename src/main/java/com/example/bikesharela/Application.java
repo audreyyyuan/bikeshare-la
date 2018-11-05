@@ -67,7 +67,6 @@ public class Application implements  CommandLineRunner{
         System.out.println(endingStationCounting);
 
         // check commute hours
-
         System.out.println("Commute: " + rows.stream().filter(r -> (r.getStartHour() > 7 && r.getStartHour() < 9 ||r.getStartHour() > 17 && r.getStartHour() < 19 )).count());
     }
 }
