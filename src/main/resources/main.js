@@ -5,7 +5,7 @@ $(document).ready(function() {
 });
 
 
-google.charts.load('current', {'packages':['corechart', 'bar']});
+google.charts.load('current', {'packages':['corechart', 'bar', 'line']});
 google.charts.setOnLoadCallback(loadAndDrawChart);
 
 function loadAndDrawChart(option) {
@@ -28,67 +28,75 @@ function loadAndDrawChart(option) {
 		title = 'Average Bike Trip Duration';
 	}
 
-	var json = {};
-	axios.get('localhost:8080' + path)
-			.then(function(response) {
+	axios.get('http://localhost:8080' + path)
+			.then(response => {
 				console.log(response);
-				json = response;
+				var json = JSON.stringify(response.data);
+				console.log(json);
+				var data = new google.visualization.DataTable(json);
+
+				var options = {
+					title: title,
+					bar: {groupWidth: "95%"},
+			        legend: { position: "bottom" },
+				};
+
+				if(option == 0 || option == 1) {
+
+					var chart = new google.charts.Bar(document.getElementById('chart_div'));
+					chart.draw(data, google.charts.Bar.convertOptions(options));
+				}
+
+				else if(option == 2) {
+					chart = new google.charts.Line(document.getElementById('chart_div'));
+					chart.draw(data, google.charts.Line.convertOptions(options));
+				}
+
 			})
 			.catch(function(error) {
 				console.log(error);
 			});
 
-	var data = new google.visualization.DataTable(json);
-	var options = {
-		title: title,
-		bar: {groupWidth: "95%"},
-        legend: { position: "bottom" },
-	};
-
-	if(option == 0 || option == 1) {
-
-		var chart = new google.charts.Bar(document.getElementById('chart_div'));
-		chart.draw(data, google.charts.Bar.convertOptions(options));
-	}
-
-	else if(option == 2) {
-		chart = new google.charts.Line(document.getElementById('chart_div'));
-		chart.draw(data, google.charts.Line.convertOptions(options));
-	}
+	//console.log('finished request');
+	//console.log(this.json);
 
 }
 
 var stats = new Vue({
 	el: '#statistics',
 	data: {
-		total: 13742,
-		distance: 0,
-		start: 'Broadway & 3rd',
-		end: 'Broadway & 3rd',
-		avgdist: 1.55,
-		commuter: 0,
+			total: 0,
+			startLoc: 'Loading...',
+			endLoc: 'Loading...',
+			avgdist: 0,
+			commute: 0
 	},
 
-	mounted: function () {
-		axios.get('https://api.coindesk.com/v1/bpi/currentprice.json')
-			.then(function(response) {
-				console.log(response);
-				/*
-				this.total = response.totalTrips;
-				this.avgdist = response.averageDistance;
-				this.dist = this.avgdist * this.total;
-				this.start = response.mostPopularStartingLocation;
-				this.end = response.mostPopularEndingLocation;
-				this.commuter = response.commuteTrips;
-				*/
-			})
-	}
+	mounted () {
+		axios.get('http://localhost:8080/statistics')
+				.then(response => {
+					console.log(response);
+					this.total = response.data.totalTrips;
+					this.avgdist = response.data.averageDistance;
+					this.startLoc = response.data.mostPopularStartingStation;
+					this.endLoc = response.data.mostPopularEndingStation;
+					this.commute = response.data.commuteTrips;
+
+				})
+				.catch(error => {
+					console.log(error);
+				});
+	},
 });
 
 var select = new Vue({
 	el: '#selector',
 	data: {
 		selected: 0
+	},
+
+	mounted() {
+		loadAndDrawChart(0);
 	}
 });
 
@@ -96,22 +104,3 @@ select.$watch('selected', function (value, oldValue) {
 
 	loadAndDrawChart(value);
 });
-
-/*
-var graph = new Vue({
-
-	el: '#graph'
-	data: {
-		chartdata: {},
-		selection: 0
-	}
-
-	mounted: function() {
-		axios.get('/graph')
-			.then(function(response) {
-				this.chartdata = response;
-				drawChart(this.chartdata);
-			})
-	}
-})
-*/

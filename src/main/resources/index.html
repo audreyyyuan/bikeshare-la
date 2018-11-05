@@ -17,6 +17,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+		<!--
     	<script type="text/javascript">
 
 			// Load the Visualization API and the piechart package.
@@ -26,7 +27,7 @@
 		    google.charts.setOnLoadCallback(drawChart);
 		      
 		    function drawChart() {
-		      var jsonData = {"cols":[{"type":"string","id":null,"label":"Passholder Type"},{"type":"number","id":null,"label":"One Way"},{"type":"number","id":null,"label":"Round Trip"}],"rows":[{"c":[{"v":"Flex Pass"},{"v":9034},{"v":483}]},{"c":[{"v":"Monthly Pass"},{"v":77532},{"v":3772}]},{"c":[{"v":"Staff Annual"},{"v":299},{"v":83}]},{"c":[{"v":"Walk-Up"},{"v":32777},{"v":8447}]}]}
+		      var jsonData = {"cols":[{"type":"string","id":null,"label":"Passholder Type"},{"type":"number","id":null,"label":"One Way"},{"type":"number","id":null,"label":"Round Trip"}],"rows":[{"c":[{"v":"Flex Pass"},{"v":1118.5609918087239},{"v":2549.565217391303}]},{"c":[{"v":"Monthly Pass"},{"v":826.3550533973138},{"v":1539.687168610817}]},{"c":[{"v":"Staff Annual"},{"v":3313.043478260871},{"v":522.6506024096385}]},{"c":[{"v":"Walk-Up"},{"v":2714.990389602469},{"v":4111.225287084177}]}]}
 		          
 		      // Create our data table out of JSON data loaded from server.
 		      var data = new google.visualization.DataTable(jsonData);
@@ -42,7 +43,8 @@
 			  chart.draw(data, google.charts.Bar.convertOptions(options));
 			}
 
-	    </script>
+	    </script> -->
+	
 	</head>
 
 	<body>
@@ -96,7 +98,7 @@
 						<div class="card teal lighten-2">
 					        <div class="card-content white-text">
 					          <p style="font-size: 18px">Popular Origin</p>
-					          <span class="card-title" style="text-align:right; font-size: 28px">{{start}}</span>
+					          <span class="card-title" style="text-align:right; font-size: 28px">{{startLoc}}</span>
 					        </div>
 					        <div class="card-action">
 					        </div>
@@ -118,7 +120,7 @@
 						<div class="card teal lighten-2">
 					        <div class="card-content white-text">
 					          <p style="font-size: 18px">Popular Destination</p>
-					          <span class="card-title" style="text-align:right; font-size: 28px">{{end}}</span>
+					          <span class="card-title" style="text-align:right; font-size: 28px">{{endLoc}}</span>
 					        </div>
 					        <div class="card-action">
 					        </div>

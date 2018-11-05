@@ -74,6 +74,12 @@ public class AnalysisService {
         return c;
     }
 
+    private double round(double value, int places) {
+
+        int scale = (int) Math.pow(10, places);
+        return (double) Math.round(value * scale) / scale;
+    }
+
     public Statistics getStatistics() {
 
         Statistics stat = new Statistics();
@@ -94,30 +100,9 @@ public class AnalysisService {
                 .filter(r -> (r.getStartingLatitude() != 0 && r.getStartingLongitude() != 0) || (r.getEndingLatitude() != 0 && r.getEndingLongitude() != 0))
                 .collect(Collectors.averagingDouble(r -> "Round Trip".equals(r.getTripCategory())
                         ?(((double) r.getDuration() / 60.0) * (speed / 60.0))
-                        :(calculateDistance(r.getStartingLatitude(), r.getStartingLongitude(), r.getEndingLatitude(), r.getEndingLongitude())))); //{
+                        :(calculateDistance(r.getStartingLatitude(), r.getStartingLongitude(), r.getEndingLatitude(), r.getEndingLongitude()))));
 
-                    /**
-                    double distance = 0;
-
-                    if(r.getTripCategory().equals("Round Trip")) {
-
-                        int time = r.getDuration();
-                        double duration = (double) time / 60.0; //in minutes
-                        double rate = speed / 60.0; //in minutes
-                        distance = rate * duration;
-                    }
-
-                    else
-                        distance = calculateDistance(r.getStartingLatitude(), r.getStartingLongitude(), r.getEndingLatitude(), r.getEndingLongitude());
-
-                    return distance;
-
-                    return "Round Trip".equals(r.getTripCategory())
-                            ?(((double) r.getDuration() / 60.0) * (speed / 60.0))
-                            :(calculateDistance(r.getStartingLatitude(), r.getStartingLongitude(), r.getEndingLatitude(), r.getEndingLongitude()));
-                })); */
-
-        stat.setAverageDistance(averageDistance);
+        stat.setAverageDistance(round(averageDistance, 2));
 
         //determines most popular starting station
         Map<Integer, Long> startingStationCounting = this.dataList.stream().collect(
