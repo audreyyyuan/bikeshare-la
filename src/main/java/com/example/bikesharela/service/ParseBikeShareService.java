@@ -1,9 +1,6 @@
 package com.example.bikesharela.service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +19,8 @@ public class ParseBikeShareService {
         List<BikeShareData> rows = new ArrayList<BikeShareData>();
 
         File f = new ClassPathResource(fname).getFile();
-        CSVParser parser = new CSVParser(new FileReader(f), CSVFormat.DEFAULT.withHeader());
+        InputStream in = ParseBikeShareService.class.getResourceAsStream(fname);
+        CSVParser parser = new CSVParser(new InputStreamReader(in), CSVFormat.DEFAULT.withHeader());
 
         for (CSVRecord record : parser) {
             BikeShareData row = new BikeShareData(

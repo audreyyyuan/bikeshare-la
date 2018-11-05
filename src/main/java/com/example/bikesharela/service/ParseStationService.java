@@ -1,9 +1,6 @@
 package com.example.bikesharela.service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -23,8 +20,9 @@ public class ParseStationService {
 
         HashMap<Integer, StationData> stations = new HashMap<>();
 
-        File f = new ClassPathResource(fname).getFile();
-        CSVParser parser = new CSVParser(new FileReader(f), CSVFormat.DEFAULT.withHeader());
+        //File f = new ClassPathResource(fname).getFile();
+        InputStream in = ParseStationService.class.getResourceAsStream(fname);
+        CSVParser parser = new CSVParser(new InputStreamReader(in), CSVFormat.DEFAULT.withHeader());
 
         for (CSVRecord record : parser) {
 

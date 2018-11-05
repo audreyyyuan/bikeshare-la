@@ -1,6 +1,5 @@
 package com.example.bikesharela;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public class Application implements  CommandLineRunner{
     @Override
     public void run(String... args) throws Exception {
 
-        List<BikeShareData> rows = this.parseBikeShareService.loadData("data.csv");
+        List<BikeShareData> rows = this.parseBikeShareService.loadData("com.example.bikesharela/service/data.csv");
 
         Integer total = rows.size();
         System.out.println("Loaded " + total);
