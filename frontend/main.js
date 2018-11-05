@@ -31,7 +31,7 @@ function loadAndDrawChart(option) {
 		subtitle = 'in minutes';
 	}
 
-	axios.get('http://localhost:8080' + path)
+	axios.get('https://ady8-bikeshare.herokuapp.com' + path)
 			.then(response => {
 				console.log(response);
 				var json = JSON.stringify(response.data);
@@ -74,7 +74,7 @@ var stats = new Vue({
 	},
 
 	mounted () {
-		axios.get('http://localhost:8080/statistics')
+		axios.get('https://ady8-bikeshare.herokuapp.com/statistics')
 				.then(response => {
 					console.log(response);
 					this.total = response.data.totalTrips;
