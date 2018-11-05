@@ -132,11 +132,11 @@
 			<div class="row">
 				<div class="col s4 offset-s4">
 					<div class="row">
-						<div class="input-field col s12">
-						    <select v-model="select">
-						      	<option value="1">TRIP LENGTH PER TRIP TYPE</option>
-						      	<option value="2">SEASONAL RIDES</option>
-						      	<option value="3">TRIP LENGTH</option>
+						<div class="input-field col s12" id="selector">
+						    <select v-model="selected">
+						      	<option value="0">TRIP LENGTH AND TRIP TYPE</option>
+						      	<option value="1">SEASONAL RIDES</option>
+						      	<option value="2">MONTHLY TRIP LENGTHS</option>
 						    </select>
 						    <label>Graph</label>
 						</div>
