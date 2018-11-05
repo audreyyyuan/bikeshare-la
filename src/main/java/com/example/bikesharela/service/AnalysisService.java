@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import com.example.bikesharela.model.StationData;
-import javafx.scene.chart.Chart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
