@@ -10,6 +10,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import com.example.bikesharela.model.BikeShareData;
 
@@ -21,8 +22,9 @@ public class ParseStationService {
         HashMap<Integer, StationData> stations = new HashMap<>();
 
         //File f = new ClassPathResource(fname).getFile();
-        InputStream in = ParseStationService.class.getResourceAsStream(fname);
-        CSVParser parser = new CSVParser(new InputStreamReader(in), CSVFormat.DEFAULT.withHeader());
+        File file = ResourceUtils.getFile("classpath:" + fname);
+        //InputStream in = ParseStationService.class.getResourceAsStream(fname);
+        CSVParser parser = new CSVParser(new FileReader(file), CSVFormat.DEFAULT.withHeader());
 
         for (CSVRecord record : parser) {
 

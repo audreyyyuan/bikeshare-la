@@ -11,6 +11,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import com.example.bikesharela.model.BikeShareData;
+import org.springframework.util.ResourceUtils;
 
 @Service
 public class ParseBikeShareService {
@@ -18,9 +19,10 @@ public class ParseBikeShareService {
     public List<BikeShareData> loadData(String fname) throws FileNotFoundException, IOException{
         List<BikeShareData> rows = new ArrayList<BikeShareData>();
 
-        File f = new ClassPathResource(fname).getFile();
-        InputStream in = ParseBikeShareService.class.getResourceAsStream(fname);
-        CSVParser parser = new CSVParser(new InputStreamReader(in), CSVFormat.DEFAULT.withHeader());
+        //File f = new ClassPathResource(fname).getFile();
+        //InputStream in = ParseBikeShareService.class.getResourceAsStream(fname);
+        File file = ResourceUtils.getFile("classpath:" + fname);
+        CSVParser parser = new CSVParser(new FileReader(file), CSVFormat.DEFAULT.withHeader());
 
         for (CSVRecord record : parser) {
             BikeShareData row = new BikeShareData(
