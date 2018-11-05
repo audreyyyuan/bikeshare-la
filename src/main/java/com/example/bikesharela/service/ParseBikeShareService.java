@@ -16,12 +16,16 @@ import org.springframework.util.ResourceUtils;
 @Service
 public class ParseBikeShareService {
 
+    /**
+     * A service that parses and obtains information about LA bike share transactions
+     * @param fname filename consisting of the bike share transactions
+     * @return a list of all the transactions and the data for each transaction
+     * @throws IOException if the file is unable to be found
+     */
     public List<BikeShareData> loadData(String fname) throws FileNotFoundException, IOException{
         List<BikeShareData> rows = new ArrayList<BikeShareData>();
 
-        //File f = new ClassPathResource(fname).getFile();
         InputStream in = getClass().getClassLoader().getResourceAsStream(fname);
-        //File file = ResourceUtils.getFile("classpath:" + fname);
         CSVParser parser = new CSVParser(new InputStreamReader(in), CSVFormat.DEFAULT.withHeader());
 
         for (CSVRecord record : parser) {

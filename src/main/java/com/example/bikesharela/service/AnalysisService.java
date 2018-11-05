@@ -397,8 +397,9 @@ public class AnalysisService {
     }
 
     /**
-     * Analyzes the data and determines the statistics (
-     * @return
+     * Analyzes the data and determines the number of one way and round trip bike transactions there are in the early
+     * morning (5:00-8:00). Converts that data into a data table in order to later display the information in a chart
+     * @return the data table with the number of early morning bike trips there are
      */
     public ChartData getMorningRides() {
 
@@ -456,6 +457,11 @@ public class AnalysisService {
         return data;
     }
 
+    /**
+     * Analyzes the bike share customer ridership throughout the seasons, calculating the average duration in minutes
+     * for one way and round trip bike trips each month. Converts the data into the format of a data table to display
+     * @return the data in a data table, used to display the the information in a column chart.
+     */
     public ChartData getSeasonRidership() {
 
         String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September",
@@ -545,22 +551,22 @@ public class AnalysisService {
             if(flex[i] == 0)
                 cells.add(null);
             else
-                cells.add(dataToCell(flex[i]));
+                cells.add(dataToCell(flex[i]/60));
 
             if(monthly[i] == 0)
                 cells.add(null);
             else
-                cells.add(dataToCell(monthly[i]));
+                cells.add(dataToCell(monthly[i]/60));
 
             if(staff[i] == 0)
                 cells.add(null);
             else
-                cells.add(dataToCell(staff[i]));
+                cells.add(dataToCell(staff[i]/60));
 
             if(walkup[i] == 0)
                 cells.add(null);
             else
-                cells.add(dataToCell(walkup[i]));
+                cells.add(dataToCell(walkup[i]/60));
 
             Row r = data.new Row();
             r.setC(cells);
@@ -573,6 +579,11 @@ public class AnalysisService {
         return data;
     }
 
+    /**
+     * Analyzes the bike share customer data and determines the number of trips that start at each hour of the day. Used
+     * to later visualize which hours have how many bicycles leaving a start station at that hour.
+     * @return the number of bike trips that started at each hour, in the format of a data table.
+     */
     public ChartData getStartTimes() {
 
         List<Integer> startTimes = new ArrayList<>();

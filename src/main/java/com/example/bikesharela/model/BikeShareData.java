@@ -22,6 +22,11 @@ public class BikeShareData {
     private String tripCategory;
     private String passholderType;
 
+    /**
+     * Converts a string in the format "yyyy-MM-dd'T'HH:mm:ss" to a date
+     * @param sDate the string representing the date and time
+     * @return a Date with the date and time, obtained from the string
+     */
     private Date convertStringToDate(String sDate) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date date = null;
@@ -37,6 +42,10 @@ public class BikeShareData {
 
     }
 
+    /**
+     * Gets the start hour of the bike transaction
+     * @return the start hour, in 24 hour format
+     */
     public Integer getStartHour() {
         Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
         calendar.setTime(this.startTime);   // assigns calendar to given date
@@ -44,6 +53,10 @@ public class BikeShareData {
 
     }
 
+    /**
+     * Gets the ending hour of the bike transaction
+     * @return the end hour, in 24 hour format
+     */
     public Integer getEndHour() {
         Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
         calendar.setTime(this.endTime);   // assigns calendar to given date
@@ -51,6 +64,10 @@ public class BikeShareData {
 
     }
 
+    /**
+     * Gets the month of the bike transaction
+     * @return the month, where 0 = January, 1 = February...11 = December
+     */
     public Integer getMonth() {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(this.startTime);

@@ -5,12 +5,10 @@ import java.util.Map;
 
 public class ChartData {
 
-    private List<Column> cols; // list of columns
-    private List<Row> rows; // list of rows
+    private List<Column> cols;
+    private List<Row> rows;
 
-    public ChartData() {
-
-    }
+    public ChartData() { }
 
     public ChartData(List<Column> cols, List<Row> rows) {
 
@@ -36,10 +34,10 @@ public class ChartData {
     }
 
     public class Column {
-        private String type; // type of column
-        private String id; // id of column
-        private String label; // label of column
-        private Map<String, Object> p; // properties of column
+        private String type;
+        private String id;
+        private String label;
+        private Map<String, Object> p;
 
         public String getType() {
             return type;
@@ -62,17 +60,24 @@ public class ChartData {
     }
 
     public class Row {
-        private List<Cell> c; // list of cells
-        private Map<String, Object> p; // properties of row
+        private List<Cell> c;
+        private Map<String, Object> p;
 
         // constructor, getters, and setters
-
         public List<Cell> getC() {
             return c;
         }
 
         public void setC(List<Cell> cells) {
             this.c = cells;
+        }
+
+        public Map<String, Object> getP() {
+            return p;
+        }
+
+        public void setP(Map<String, Object> p) {
+            this.p = p;
         }
 
         public class Cell {
@@ -87,6 +92,22 @@ public class ChartData {
 
             public void setV(Object val) {
                 this.v = val;
+            }
+
+            public void setF(String f) {
+                this.f = f;
+            }
+
+            public String getF() {
+                return f;
+            }
+
+            public void setP(Map<String, Object> p) {
+                this.p = p;
+            }
+
+            public Map<String, Object> getP() {
+                return p;
             }
         }
     }

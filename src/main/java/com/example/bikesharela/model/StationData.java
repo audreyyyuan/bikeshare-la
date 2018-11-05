@@ -8,6 +8,11 @@ public class StationData {
     private String region;
     private boolean status;
 
+    /**
+     * Converts the string describing the station status-- true if active, false if not
+     * @param status status string
+     * @return true/false depending whether the station is active
+     */
     private boolean convertStringStatus(String status) {
 
         if(status.equals("Active"))
