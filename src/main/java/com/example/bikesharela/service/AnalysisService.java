@@ -38,8 +38,8 @@ public class AnalysisService {
 
     @PostConstruct
     public void init() throws FileNotFoundException, IOException {
-        this.dataList = this.parseBikeShareService.loadData("com.example.bikesharela/service/data.csv");
-        this.stationList = this.parseStationService.loadStations("com.example.bikesharela/service/stations.csv");
+        this.dataList = this.parseBikeShareService.loadData("data.csv");
+        this.stationList = this.parseStationService.loadStations("stations.csv");
     }
 
     //calculates haversine distance between two points
