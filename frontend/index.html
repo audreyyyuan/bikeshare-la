@@ -9,6 +9,7 @@
 		<!-- MATERIALIZE -->
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 		<!-- VUE.JS -->
 	    <!-- development version, includes helpful console warnings -->
@@ -103,26 +104,37 @@
 				</div> <!-- end of statistics blurb -->
 			</div>
 
-			<div class="row">
+			<div class="row" id="selector">
 				<div class="col s4 offset-s4">
 					<div class="row">
-						<div class="input-field col s12" id="selector">
+						<div class="input-field col s12">
 						    <select v-model="selected">
 						    	<option value="0" disabled selected>CHOOSE A GRAPH</option>
-						      	<option value="1">TRIP LENGTH AND TRIP TYPE</option>
-						      	<option value="2">SEASONAL RIDES</option>
-						      	<option value="3">MONTHLY TRIP LENGTHS</option>
+						      	<option value="1">TRIP LENGTH AND PLAN</option>
+						      	<option value="2">NUMBER OF RIDES</option>
+						      	<option value="3">TRIP DURATION</option>
+						      	<option value="4">MORNING RIDES</option>
+						      	<option value="5">TRIP LENGTH AND TYPE</option>
+						      	<option value="6">START TIMES</option>
 						    </select>
 						    <label>Graph</label>
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="row">
 				<div class="col s10 offset-s1">
-					<div id = "chart_div" style="width: auto; height: 500px;"></div>
+					<div class="card">
+					    <div class="card-content">
+					    	<span class="card-title activator grey-text text-darken-4">Graph<i class="material-icons right">more_vert</i></span>
+					    	<div id = "chart_div" style="width: auto; height: 500px;"></div>
+					    </div>
+					    <div class="card-reveal">
+					      	<span class="card-title grey-text text-darken-4">Graph<i class="material-icons right">close</i></span>
+					      	<p>{{ blurb }}</p>
+					    </div>
+					</div>
 				</div>
+				
 			</div>
 
 		</div>

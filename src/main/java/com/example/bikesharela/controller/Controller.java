@@ -36,4 +36,19 @@ public class Controller {
     public ChartData getAverageDuration() {
         return this.analysisService.getDurationData();
     }
+
+    @RequestMapping(value="/morning", method = RequestMethod.GET)
+    public ChartData getMorningRides() {
+        return this.analysisService.getMorningRides();
+    }
+
+    @RequestMapping(value="/seasonal", method = RequestMethod.GET)
+    public ChartData getSeasonRidership() {
+        return this.analysisService.getSeasonRidership();
+    }
+
+    @RequestMapping(value="/starttime", method = RequestMethod.GET)
+    public ChartData getStartTimes() {
+        return this.analysisService.getStartTimes();
+    }
 }

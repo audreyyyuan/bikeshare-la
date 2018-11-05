@@ -4,8 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.List;
-import java.util.Date;
-import java.util.Calendar;
 import java.util.ArrayList;
 
 import java.util.stream.Collectors;
@@ -43,7 +41,7 @@ public class AnalysisService {
     }
 
     //calculates haversine distance between two points
-    private double calculateDistance(double lat1, double long1, double lat2, double long2) {
+    private double haversineDistance(double lat1, double long1, double lat2, double long2) {
 
         if(lat1 == 0 || lat2 == 0 || long1 == 0 || long2 == 0)
             return 0;
@@ -56,13 +54,6 @@ public class AnalysisService {
         double a = Math.pow(Math.sin(latDiff / 2),2) + Math.pow(Math.sin(longDiff / 2),2) * Math.cos(lat1) * Math.cos(lat2);
         double distance = 2 * Rearth * Math.asin(Math.sqrt(a));
         return distance;
-    }
-
-    private int getMonth(Date d) {
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(d);
-        return cal.get(Calendar.MONTH);
     }
 
     private Cell dataToCell(Object v) {
@@ -98,7 +89,7 @@ public class AnalysisService {
                 .filter(r -> (r.getStartingLatitude() != 0 && r.getStartingLongitude() != 0) || (r.getEndingLatitude() != 0 && r.getEndingLongitude() != 0))
                 .collect(Collectors.averagingDouble(r -> "Round Trip".equals(r.getTripCategory())
                         ?(((double) r.getDuration() / 60.0) * (speed / 60.0))
-                        :(calculateDistance(r.getStartingLatitude(), r.getStartingLongitude(), r.getEndingLatitude(), r.getEndingLongitude()))));
+                        :(haversineDistance(r.getStartingLatitude(), r.getStartingLongitude(), r.getEndingLatitude(), r.getEndingLongitude()))));
 
         stat.setAverageDistance(round(averageDistance, 2));
 
@@ -262,7 +253,7 @@ public class AnalysisService {
         this.dataList.stream()
                 .forEach(r -> {
 
-                    int month = getMonth(r.getStartTime());
+                    int month = r.getMonth();
                     if("One Way".equals(r.getTripCategory()))
                         month_ow[month] = month_ow[month] + 1;
                     else
@@ -320,7 +311,7 @@ public class AnalysisService {
 
         this.dataList.stream()
                 .forEach(r -> {
-                    int month = getMonth(r.getStartTime());
+                    int month = r.getMonth();
                     double sum = avg_duration[month] * count[month];
                     sum += r.getDuration();
                     count[month] = count[month] + 1;
@@ -358,6 +349,241 @@ public class AnalysisService {
         return data;
     }
 
+    //gets station infromation throughout the day.
+    public void getStationData() {
+
+        //calculates most popular starting stations at the beginning of the day
+        List<StationData> popularStartOfDay = new ArrayList<>();
+        Map<Integer, Long> startingStationCounting = this.dataList.stream().collect(
+                Collectors.groupingBy(BikeShareData::getStartingStationId, Collectors.counting()));
+
+        startingStationCounting.entrySet().stream()
+                .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
+                .limit(3)
+                .forEach(entry -> popularStartOfDay.add(this.stationList.get(entry)));
+
+        //calculates most popular ending stations at the end of the day
+        List<StationData> popularEndOfDay = new ArrayList<>();
+        Map<Integer, Long> endingStationCounting = this.dataList.stream().collect(
+                Collectors.groupingBy(BikeShareData::getEndingStationId, Collectors.counting()));
+
+        endingStationCounting.entrySet().stream()
+                .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
+                .limit(3)
+                .forEach(entry -> popularEndOfDay.add(this.stationList.get(entry)));
+    }
+
+    public ChartData getMorningRides() {
+
+        String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September",
+                "October", "November", "December"};
+        int[] owCount = new int[12];
+        int[] rtCount = new int[12];
+
+        this.dataList
+                .stream()
+                .filter(r -> r.getStartHour() >= 5 && r.getStartHour() <= 8)
+                .filter(r -> r.getEndHour() >= r.getStartHour() && r.getEndHour() <= 8)
+                .forEach(r -> {
+                    boolean roundTrip = "Round Trip".equals(r.getTripCategory())?true:false;
+                    int month = r.getMonth();
+
+                    if(roundTrip)
+                        rtCount[month] += 1;
+                    else
+                        owCount[month] += 1;
+                });
+
+        ChartData data = new ChartData();
+
+        List<Column> columns = new ArrayList<>();
+        Column col = data.new Column();
+        col.setType("string");
+        col.setLabel("Month");
+        columns.add(col);
+        col = data.new Column();
+        col.setType("number");
+        col.setLabel("One Way");
+        columns.add(col);
+        col = data.new Column();
+        col.setType("number");
+        col.setLabel("Round Trip");
+        columns.add(col);
+
+        List<Row> rows = new ArrayList<>();
+        for(int i = 0; i < 12; i++) {
+
+            List<Cell> cells = new ArrayList<>();
+            cells.add(dataToCell(months[i]));
+            cells.add(dataToCell(owCount[i]));
+            cells.add(dataToCell(rtCount[i]));
+
+            Row r = data.new Row();
+            r.setC(cells);
+            rows.add(r);
+        }
+
+        data.setCols(columns);
+        data.setRows(rows);
+
+        return data;
+    }
+
+    public ChartData getSeasonRidership() {
+
+        String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September",
+                "October", "November", "December"};
+        double[] flex = new double[12];
+        double[] monthly = new double[12];
+        double[] staff = new double[12];
+        double[] walkup = new double[12];
+        int[] flexCount = new int[12];
+        int[] monthlyCount = new int[12];
+        int[] staffCount = new int[12];
+        int[] walkupCount = new int[12];
+
+        this.dataList.stream()
+                .forEach(r -> {
+                    int month = r.getMonth();
+                    String pass = r.getPassholderType();
+                    int duration = r.getDuration();
+
+                    if(pass.equals("Flex Pass")) {
+
+                        int count = flexCount[month];
+                        double sum = flex[month] * count;
+                        sum += duration;
+                        count += 1;
+                        flex[month] = sum / count;
+                        flexCount[month] = count;
+                    }
+                    else if(pass.equals("Monthly Pass")) {
+
+                        int count = monthlyCount[month];
+                        double sum = monthly[month] * count;
+                        sum += duration;
+                        count += 1;
+                        monthly[month] = sum / count;
+                        monthlyCount[month] = count;
+                    }
+                    else if(pass.equals("Staff Annual")) {
+
+                        int count = staffCount[month];
+                        double sum = staff[month] * count;
+                        sum += duration;
+                        count += 1;
+                        staff[month] = sum / count;
+                        staffCount[month] = count;
+                    }
+                    else {
+
+                        int count = walkupCount[month];
+                        double sum = walkup[month] * count;
+                        sum += duration;
+                        count += 1;
+                        walkup[month] = sum / count;
+                        walkupCount[month] = count;
+                    }
+                });
+
+        ChartData data = new ChartData();
+
+        List<Column> columns = new ArrayList<>();
+        Column col = data.new Column();
+        col.setType("string");
+        col.setLabel("Month");
+        columns.add(col);
+        col = data.new Column();
+        col.setType("number");
+        col.setLabel("Flex Pass");
+        columns.add(col);
+        col = data.new Column();
+        col.setType("number");
+        col.setLabel("Monthly Pass");
+        columns.add(col);
+        col = data.new Column();
+        col.setType("number");
+        col.setLabel("Staff Annual");
+        columns.add(col);
+        col = data.new Column();
+        col.setType("number");
+        col.setLabel("Walk-up");
+        columns.add(col);
+
+        List<Row> rows = new ArrayList<>();
+        for(int i = 0; i < 12; i++) {
+
+            List<Cell> cells = new ArrayList<>();
+            cells.add(dataToCell(months[i]));
+            if(flex[i] == 0)
+                cells.add(null);
+            else
+                cells.add(dataToCell(flex[i]));
+
+            if(monthly[i] == 0)
+                cells.add(null);
+            else
+                cells.add(dataToCell(monthly[i]));
+
+            if(staff[i] == 0)
+                cells.add(null);
+            else
+                cells.add(dataToCell(staff[i]));
+
+            if(walkup[i] == 0)
+                cells.add(null);
+            else
+                cells.add(dataToCell(walkup[i]));
+
+            Row r = data.new Row();
+            r.setC(cells);
+            rows.add(r);
+        }
+
+        data.setCols(columns);
+        data.setRows(rows);
+
+        return data;
+    }
+
+    public ChartData getStartTimes() {
+
+        List<Integer> startTimes = new ArrayList<>();
+        this.dataList.stream()
+                .forEach(r -> {
+                    startTimes.add(r.getStartHour());
+                });
+
+        ChartData data = new ChartData();
+
+        List<Column> columns = new ArrayList<>();
+        Column col = data.new Column();
+        col.setType("string");
+        col.setLabel("Bike");
+        columns.add(col);
+        col = data.new Column();
+        col.setType("number");
+        col.setLabel("Starting Hour");
+        columns.add(col);
+
+        List<Row> rows = new ArrayList<>();
+        for(int i = 0; i < startTimes.size(); i++) {
+
+            List<Cell> cells = new ArrayList<>();
+            cells.add(dataToCell("Bike"));
+            cells.add(dataToCell(startTimes.get(i)));
+
+            Row r = data.new Row();
+            r.setC(cells);
+            rows.add(r);
+        }
+
+        data.setCols(columns);
+        data.setRows(rows);
+
+        return data;
+    }
+
     public List<BikeShareData> getDataList() {
 
         return dataList;
@@ -366,11 +592,5 @@ public class AnalysisService {
     public void setDataList(List<BikeShareData> dataList) {
 
         this.dataList = dataList;
-    }
-
-    public static void main(String [] args) {
-
-        AnalysisService as = new AnalysisService();
-        System.out.println(as.calculateDistance(34.028511, -118.25667, 34.0342102, -118.25459));
     }
 }

@@ -37,18 +37,24 @@ public class BikeShareData {
 
     }
 
-    public Integer getStartHour ( ) {
+    public Integer getStartHour() {
         Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
         calendar.setTime(this.startTime);   // assigns calendar to given date
         return calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
 
     }
 
-    public Integer getEndHour ( ) {
+    public Integer getEndHour() {
         Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
         calendar.setTime(this.endTime);   // assigns calendar to given date
         return calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
 
+    }
+
+    public Integer getMonth() {
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(this.startTime);
+        return calendar.get(Calendar.MONTH);
     }
 
     public BikeShareData(Integer duration, String startTime, String endTime, Integer startingPositionId,
