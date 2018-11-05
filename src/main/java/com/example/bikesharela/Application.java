@@ -28,7 +28,7 @@ public class Application implements  CommandLineRunner{
     @Override
     public void run(String... args) throws Exception {
 
-        List<BikeShareData> rows = this.parseBikeShareService.loadData("com.example.bikesharela/service/data.csv");
+        List<BikeShareData> rows = this.parseBikeShareService.loadData("data.csv");
 
         Integer total = rows.size();
         System.out.println("Loaded " + total);
