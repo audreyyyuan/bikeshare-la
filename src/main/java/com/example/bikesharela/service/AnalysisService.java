@@ -154,10 +154,15 @@ public class AnalysisService {
     //FIX THE HECK OUT OF THIS
     public ChartData getRouteData() {
 
-        Integer[] flex = {0, 0};
-        Integer[] monthly = {0, 0};
-        Integer[] staff = {0, 0};
-        Integer[] walkup = {0, 0};
+        Double[] flex = {0.0, 0.0};
+        Double[] monthly = {0.0, 0.0};
+        Double[] staff = {0.0, 0.0};
+        Double[] walkup = {0.0, 0.0};
+
+        int[] flexCount = {0, 0};
+        int[] monthlyCount = {0, 0};
+        int[] staffCount = {0, 0};
+        int[] walkupCount = {0, 0};
 
         this.dataList
                 .forEach(r -> {
@@ -165,23 +170,39 @@ public class AnalysisService {
                     int roundtrip = r.getTripCategory().equals("Round Trip")?1:0;
                     if(r.getPassholderType().equals("Flex Pass")) {
 
-                        int current = flex[roundtrip];
-                        flex[roundtrip] = current + 1;
+                        int count = flexCount[roundtrip];
+                        double sum = flex[roundtrip] * count;
+                        count += 1;
+                        sum += r.getDuration();
+                        flex[roundtrip] = sum / count;
+                        flexCount[roundtrip] = count;
                     }
                     else if(r.getPassholderType().equals("Monthly Pass")) {
 
-                        int current = monthly[roundtrip];
-                        monthly[roundtrip] = current + 1;
+                        int count = monthlyCount[roundtrip];
+                        double sum = monthly[roundtrip] * count;
+                        count += 1;
+                        sum += r.getDuration();
+                        monthly[roundtrip] = sum / count;
+                        monthlyCount[roundtrip] = count;
                     }
                     else if(r.getPassholderType().equals("Staff Annual")) {
 
-                        int current = staff[roundtrip];
-                        staff[roundtrip] = current + 1;
+                        int count = staffCount[roundtrip];
+                        double sum = staff[roundtrip] * count;
+                        count += 1;
+                        sum += r.getDuration();
+                        staff[roundtrip] = sum / count;
+                        staffCount[roundtrip] = count;
                     }
                     else {
 
-                        int current = walkup[roundtrip];
-                        walkup[roundtrip] = current + 1;
+                        int count = walkupCount[roundtrip];
+                        double sum = walkup[roundtrip] * count;
+                        count += 1;
+                        sum += r.getDuration();
+                        walkup[roundtrip] = sum / count;
+                        walkupCount[roundtrip] = count;
                     }
 
 
@@ -286,8 +307,14 @@ public class AnalysisService {
 
             List<Cell> cells = new ArrayList<>();
             cells.add(dataToCell(months[i]));
-            cells.add(dataToCell(month_ow[i]));
-            cells.add(dataToCell(month_rt[i]));
+            if(month_ow[i] == 0) {
+                cells.add(null);
+                cells.add(null);
+            }
+            else {
+                cells.add(dataToCell(month_ow[i]));
+                cells.add(dataToCell(month_rt[i]));
+            }
 
             Row r = data.new Row();
             r.setC(cells);
@@ -336,7 +363,10 @@ public class AnalysisService {
 
             List<Cell> cells = new ArrayList<>();
             cells.add(dataToCell(months[i]));
-            cells.add(dataToCell(avg_duration[i]));
+            if(avg_duration[i] == 0)
+                cells.add(null);
+            else
+                cells.add(dataToCell(avg_duration[i]));
 
             Row r = data.new Row();
             r.setC(cells);
